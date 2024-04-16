@@ -5,7 +5,6 @@ import io.moneytracker.domain.subcategory.model.Subcategory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -13,6 +12,7 @@ import static org.mockito.Mockito.mock;
 
 public class CategoryTest {
     private Category category;
+
 
     @BeforeEach
     public void setUp(){
