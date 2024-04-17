@@ -23,6 +23,8 @@ public class SubcategoryService {
 
     @Transactional
     public SubcategoryResponseDTO createSubcategory(CreateSubcategoryRequestDTO dto){
+        log.info("Creating a new subcategory...");
+
         Subcategory subcategory = Subcategory.builder()
                 .name(dto.getName())
                 .parentCategory(categoryRepository.findById(dto.getParentCategoryId())
@@ -31,11 +33,29 @@ public class SubcategoryService {
         addSubcategoryInCategorySet(subcategory);
 
         subcategoryRepository.save(subcategory);
+        log.info("new subcategory created with ID: {}", subcategory.getId());
         return SubcategoryMapper.toSubcategoryResponseDTO(subcategory);
+    }
+
+
+    @Transactional
+    public void deleteSubcategoryById(Long id){
+        log.info("Deleting a subcategory with ID: {}", id);
+
+        Subcategory subcategory = subcategoryRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Category not found."));
+        removeSubcategoryInCategorySet(subcategory);
+        subcategoryRepository.delete(subcategory);
+        log.info("Deleted successful");
     }
 
     private void addSubcategoryInCategorySet(Subcategory subcategory){
         Set<Subcategory> parentSubcategories = subcategory.getParentCategory().getSubcategories();
         parentSubcategories.add(subcategory);
     }
+    private void removeSubcategoryInCategorySet(Subcategory subcategory){
+        Set<Subcategory> parentSubcategories = subcategory.getParentCategory().getSubcategories();
+        parentSubcategories.remove(subcategory);
+    }
+
 }

@@ -25,4 +25,10 @@ public class SubcategoryController {
                 .buildAndExpand(subcategoryResponseDTO.getId()).toUri();
         return ResponseEntity.created(uri).body(subcategoryResponseDTO);
     }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> deleteSubcategory(@PathVariable("id") Long id){
+        service.deleteSubcategoryById(id);
+        return ResponseEntity.noContent().build();
+    }
 }
