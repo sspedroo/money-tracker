@@ -1,0 +1,16 @@
+springdoc:
+  swagger-ui:
+    doc-expansion: none
+    operationsSorter: alpha
+    tagsSorter: alpha
+spring:
+  application:
+    name: MoneyTracker
+  profiles:
+    active: test
+server:
+  port: 8081
+  compression:
+    enable: true
+    error:
+      include-stacktrace: never
