@@ -2,11 +2,11 @@ package io.moneytracker.domain.subcategory.model;
 
 import io.moneytracker.domain.category.model.Category;
 import io.moneytracker.infra.BaseEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.*;
 
+@Entity(name = "tb_subcategory")
+@Table(name = "tb_subcategory")
 @Getter
 @Setter
 @AllArgsConstructor

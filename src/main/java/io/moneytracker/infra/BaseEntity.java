@@ -21,4 +21,14 @@ public abstract class BaseEntity {
     private LocalDateTime createAt;
     @Column(columnDefinition = "DATETIME")
     private LocalDateTime updateAt;
+
+    @PrePersist
+    protected void onCreate(){
+        createAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate(){
+        updateAt = LocalDateTime.now();
+    }
 }
