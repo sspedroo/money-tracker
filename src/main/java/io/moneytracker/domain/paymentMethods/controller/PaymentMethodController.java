@@ -1,7 +1,9 @@
-package io.moneytracker.domain.paymentMethods;
+package io.moneytracker.domain.paymentMethods.controller;
 
 import io.moneytracker.domain.paymentMethods.dto.CreateCreditCardPaymentMethodRequestDTO;
+import io.moneytracker.domain.paymentMethods.dto.CreatePixPaymentMethodRequestDTO;
 import io.moneytracker.domain.paymentMethods.dto.CreditCardResponseDTO;
+import io.moneytracker.domain.paymentMethods.dto.PixResponseDTO;
 import io.moneytracker.domain.paymentMethods.service.PaymentMethodService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,5 +27,13 @@ public class PaymentMethodController {
         URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}")
                 .buildAndExpand(creditCardResponseDTO.getId()).toUri();
         return ResponseEntity.created(uri).body(creditCardResponseDTO);
+    }
+
+    @PostMapping("/pix")
+    public ResponseEntity<PixResponseDTO> createPix(@RequestBody @Valid CreatePixPaymentMethodRequestDTO dto){
+        PixResponseDTO pixResponseDTO = service.addPix(dto);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}")
+                .buildAndExpand(pixResponseDTO.getId()).toUri();
+        return ResponseEntity.created(uri).body(pixResponseDTO);
     }
 }

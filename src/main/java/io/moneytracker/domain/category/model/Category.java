@@ -1,6 +1,7 @@
 package io.moneytracker.domain.category.model;
 
 import io.moneytracker.domain.subcategory.model.Subcategory;
+import io.moneytracker.domain.transaction.model.Transaction;
 import io.moneytracker.infra.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -25,4 +26,7 @@ public class Category extends BaseEntity {
     @Column(nullable = false)
     @OrderBy("name DESC")
     private Set<Subcategory> subcategories = new HashSet<>();
+    @OneToMany(mappedBy = "category")
+    @Setter(AccessLevel.NONE)
+    private Set<Transaction> transactions = new HashSet<>();
 }
