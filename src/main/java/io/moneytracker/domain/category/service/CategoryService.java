@@ -4,6 +4,7 @@ import io.moneytracker.domain.category.dto.CategoryResponseDTO;
 import io.moneytracker.domain.category.dto.CreateCategoryRequestDTO;
 import io.moneytracker.domain.category.model.Category;
 import io.moneytracker.domain.category.repository.CategoryRepository;
+import io.moneytracker.domain.user.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +18,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class CategoryService {
-    private final CategoryRepository repository;
+    private final CategoryRepository categoryRepository;
+    private final UserRepository userRepository;
 
     @Transactional
     public CategoryResponseDTO createCategory(CreateCategoryRequestDTO dto){
@@ -25,10 +27,12 @@ public class CategoryService {
 
         Category category = Category.builder()
                 .name(dto.getName())
+                .user(userRepository.findById(dto.getUserID())
+                        .orElseThrow(() -> new EntityNotFoundException("User not found.")))
                 .build();
-        repository.save(category);
+        categoryRepository.save(category);
 
-        log.info("new category created with ID: {}", category.getId());
+        log.info("new category created with ID: {} and NAME: {}", category.getId(), category.getName());
         return CategoryResponseDTO.toCategoryResponseDTO(category);
     }
 
@@ -36,7 +40,7 @@ public class CategoryService {
     public CategoryResponseDTO findCategoryById(Long id){
         log.info("Finding category by ID: {}", id);
 
-        Category category = repository.findById(id)
+        Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Category not found."));
         return CategoryResponseDTO.toCategoryResponseDTO(category);
     }
@@ -44,7 +48,7 @@ public class CategoryService {
     @Transactional(readOnly = true)
     public List<CategoryResponseDTO> findAllCategory(){
         log.info("Finding all categories...");
-        List<Category> categories = repository.findAll(Sort.by(Sort.Direction.ASC, "name"));
+        List<Category> categories = categoryRepository.findAll(Sort.by(Sort.Direction.ASC, "name"));
         return categories.stream().map(CategoryResponseDTO::toCategoryResponseDTO).toList();
     }
 
@@ -52,8 +56,8 @@ public class CategoryService {
     public void deleteById(Long id){
         log.info("Deleting category by ID: {}", id);
 
-        if (repository.existsById(id)) {
-            repository.deleteById(id);
+        if (categoryRepository.existsById(id)) {
+            categoryRepository.deleteById(id);
 
             log.info("Category with ID {} deleted successfully", id);
         } else {

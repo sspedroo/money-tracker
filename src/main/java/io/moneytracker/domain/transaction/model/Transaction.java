@@ -32,13 +32,12 @@ public class Transaction extends BaseEntity {
     @Column(nullable = false)
     private LocalDate date;
     @Column(nullable = false)
-    private BigDecimal value;
+    private BigDecimal transactionValue;
     private String description;
-    @Column(nullable = false)
     @ManyToOne
-    @JoinColumn(name = "payment_method_id")
+    @JoinColumn(name = "payment_method_id", nullable = false)
     private PaymentMethod paymentMethod;
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 }

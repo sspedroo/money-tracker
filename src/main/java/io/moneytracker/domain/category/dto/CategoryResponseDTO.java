@@ -18,12 +18,14 @@ import java.util.stream.Collectors;
 public final class CategoryResponseDTO {
     private Long id;
     private String name;
+    private Long userId;
     private Set<String> subCategories = new HashSet<>();
 
     public static CategoryResponseDTO toCategoryResponseDTO(Category entity){
         return CategoryResponseDTO.builder()
                 .id(entity.getId())
                 .name(entity.getName())
+                .userId(entity.getUser().getId())
                 .subCategories(entity.getSubcategories() == null ?
                         null : entity.getSubcategories().stream().map(Subcategory::getName).collect(Collectors.toSet()))
                 .build();

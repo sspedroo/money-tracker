@@ -8,6 +8,11 @@ spring:
     name: MoneyTracker
   profiles:
     active: test
+  servlet:
+    multipart:
+      max-request-size: 215MB
+      file-size-threshold: 2KB
+      max-file-size: 200MB
 server:
   port: 8081
   compression:

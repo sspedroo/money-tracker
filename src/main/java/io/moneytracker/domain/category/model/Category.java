@@ -2,6 +2,7 @@ package io.moneytracker.domain.category.model;
 
 import io.moneytracker.domain.subcategory.model.Subcategory;
 import io.moneytracker.domain.transaction.model.Transaction;
+import io.moneytracker.domain.user.model.User;
 import io.moneytracker.infra.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -21,6 +22,9 @@ import java.util.Set;
 public class Category extends BaseEntity {
     @Column(nullable = false, unique = true, length = 50)
     private String name;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false, updatable = false)
+    private User user;
     @OneToMany(mappedBy = "parentCategory")
     @Setter(AccessLevel.NONE)
     @Column(nullable = false)

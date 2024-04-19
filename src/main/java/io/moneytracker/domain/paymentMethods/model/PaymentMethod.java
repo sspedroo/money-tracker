@@ -1,6 +1,7 @@
 package io.moneytracker.domain.paymentMethods.model;
 
 import io.moneytracker.domain.transaction.model.Transaction;
+import io.moneytracker.domain.user.model.User;
 import io.moneytracker.infra.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -23,6 +24,9 @@ import java.util.Set;
 public class PaymentMethod extends BaseEntity {
     @Column(unique = true)
     private String name;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false, updatable = false)
+    private User user;
     @OneToMany(mappedBy = "paymentMethod")
     private Set<Transaction> transactions = new HashSet<>();
 }

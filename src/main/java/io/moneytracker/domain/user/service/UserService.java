@@ -7,6 +7,7 @@ import io.moneytracker.domain.user.model.User;
 import io.moneytracker.domain.user.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +20,7 @@ import java.nio.file.Paths;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserService {
     private final UserRepository repository;
     private static final String UPLOAD_DIRECTORY = "C:\\FACULDADE\\JAVA\\MoneyTracker\\src\\main\\webapp\\images";
@@ -26,17 +28,22 @@ public class UserService {
 
     @Transactional
     public UserResponseDTO saveUser(CreateUserRequestDTO dto, MultipartFile image) throws IOException {
+        log.info("saving new user in database");
         User user = User.builder()
                 .name(dto.getName())
                 .email(dto.getEmail())
-                .password(dto.getPassword()).build();
+                .password(dto.getPassword())
+                .isActive(1)
+                .build();
 
-        if (image != null){
+        if (image != null && !image.isEmpty()){
             String originalFilename = getOriginalFilename(image);
             user.setProfileImage(originalFilename);
         }
 
         repository.save(user);
+
+        log.info("User saved successfully");
         return UserMapper.toUserResponseDTO(user);
     }
 
@@ -52,6 +59,7 @@ public class UserService {
     }
 
     public FileSystemResource getProfileImage(Long userId) {
+        log.info("retrieving profile image from user ID: {}", userId);
         User user = repository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
         if (user.getProfileImage() == null){

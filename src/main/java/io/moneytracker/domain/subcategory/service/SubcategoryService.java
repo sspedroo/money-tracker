@@ -46,7 +46,7 @@ public class SubcategoryService {
                 .orElseThrow(() -> new EntityNotFoundException("Category not found."));
         removeSubcategoryInCategorySet(subcategory);
         subcategoryRepository.delete(subcategory);
-        log.info("Deleted successful");
+        log.info("Deleted successfully");
     }
 
     private void addSubcategoryInCategorySet(Subcategory subcategory){
