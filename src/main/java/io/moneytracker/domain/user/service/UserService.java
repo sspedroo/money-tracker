@@ -1,5 +1,6 @@
 package io.moneytracker.domain.user.service;
 
+import io.moneytracker.domain.paymentMethods.model.PaymentMethod;
 import io.moneytracker.domain.user.dto.CreateUserRequestDTO;
 import io.moneytracker.domain.user.dto.UserMapper.UserMapper;
 import io.moneytracker.domain.user.dto.UserResponseDTO;
@@ -68,5 +69,11 @@ public class UserService {
         Path imagePath = Paths.get(UPLOAD_DIRECTORY, user.getProfileImage());
 
         return new FileSystemResource(imagePath.toFile());
+    }
+
+    @Transactional
+    public void removePaymentMethodFromUser(User user, PaymentMethod paymentMethod){
+        user.getPaymentMethods().remove(paymentMethod);
+        repository.save(user);
     }
 }

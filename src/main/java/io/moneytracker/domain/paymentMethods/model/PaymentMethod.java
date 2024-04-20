@@ -24,6 +24,8 @@ import java.util.Set;
 public class PaymentMethod extends BaseEntity {
     @Column(unique = true)
     private String name;
+    @Column(nullable = false)
+    private Integer isActive;
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false, updatable = false)
     private User user;

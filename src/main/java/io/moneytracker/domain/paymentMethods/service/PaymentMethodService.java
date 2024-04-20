@@ -10,6 +10,7 @@ import io.moneytracker.domain.paymentMethods.model.PaymentMethod;
 import io.moneytracker.domain.paymentMethods.model.PixPayment;
 import io.moneytracker.domain.paymentMethods.repository.PaymentMethodRepository;
 import io.moneytracker.domain.user.repository.UserRepository;
+import io.moneytracker.domain.user.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +25,7 @@ import java.util.Set;
 public class PaymentMethodService {
     private final PaymentMethodRepository paymentMethodRepository;
     private final UserRepository userRepository;
+    private final UserService userService;
 
     @Transactional
     public CreditCardResponseDTO addCreditCard(CreateCreditCardPaymentMethodRequestDTO dto){
@@ -34,6 +36,7 @@ public class PaymentMethodService {
                 .name("Cartão de Crédito - " + dto.getBank())
                 .user(userRepository.findById(dto.getUserId())
                         .orElseThrow(() -> new EntityNotFoundException("User not found.")))
+                .isActive(1)
                 .build();
         paymentMethodRepository.save(creditCardPayment);
         log.info("credit card added successfully");
@@ -48,19 +51,18 @@ public class PaymentMethodService {
                 .user(userRepository.findById(dto.getUserId())
                         .orElseThrow(() -> new EntityNotFoundException("User not found.")))
                 .name("Pix - " + dto.getBank())
+                .isActive(1)
                 .build();
         paymentMethodRepository.save(pix);
         log.info("pix added successfully");
         return PaymentMethodMapper.toPixResponseDTO(pix);
     }
 
-//    public void removeCreditCardAsPaymentMethod(Long creditCardId){
-//        PaymentMethod paymentMethod = paymentMethodRepository.findById(creditCardId)
-//                .orElseThrow((() -> new EntityNotFoundException("Credit card not found.")));
-//        Set<PaymentMethod> userPaymentMethod = paymentMethod.getUser().getPaymentMethods();
-//        userPaymentMethod.remove(paymentMethod);
-//        paymentMethodRepository.save(paymentMethod);
-//    }
+    public void removeCreditCardAsPaymentMethod(Long creditCardId){
+        PaymentMethod paymentMethod = paymentMethodRepository.findById(creditCardId)
+                .orElseThrow((() -> new EntityNotFoundException("Credit card not found.")));
+        userService.removePaymentMethodFromUser(paymentMethod.getUser(), paymentMethod);
+    }
 
 
 }
